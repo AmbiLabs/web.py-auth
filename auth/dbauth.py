@@ -138,7 +138,6 @@ class DBAuth(object):
                     user = self.session.user
                     if 'perm' in pars:
                         if not self.has_perm(pars['perm'], user):
-                            print("5252352342424234234")
                             raise AuthError
                     if 'test' in pars:
                         if not pars['test'](user):
@@ -203,8 +202,6 @@ class DBAuth(object):
                        vars={'uid': user.user_id})
 
         user.perms = self.get_permissions(user)
-        print("sfsffdfsfsdfsdfsdfsdfds")
-        print(user.perms)
         try:
             del user['user_password']
         except KeyError:
@@ -359,7 +356,6 @@ class DBAuth(object):
         permStr = [perm]
         # perm sequence check
         perm = set(perm)
-        print (perm)
         res = user_perms.intersection(perm) == perm
         if res:
             return True
