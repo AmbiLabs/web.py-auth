@@ -175,7 +175,7 @@ class DBAuth(object):
         login = login.strip()
         password = password.strip()
 
-        query_where = web.db.sqlwhere({'user_login': login})
+        query_where = web.db.sqlwhere([('user_login', login)])
         user = self.db.select('user', where=query_where).list()
         if not user: return
 
@@ -468,18 +468,26 @@ class DBAuth(object):
 def hash_sha512(password, salt='', n=12):
     from hashlib import sha512
     salt = salt or sha(urandom(40)).hexdigest()
-    hashed = sha512(salt + password).hexdigest()
-    for i in xrange(n):
-        hashed = sha512(hashed + salt).hexdigest()
-    return '$sha512$%i$%s$%s' % (n, salt, hashed)
+    saltbytes = salt.encode('utf-8')
+    passwordbytes = password.encode('utf-8')
+    hashed = sha512(saltbytes + passwordbytes).hexdigest()
+    hashedbytes = hashed.encode('utf-8')
+    for i in range(n):
+        hashedn = sha512(hashedbytes + saltbytes).hexdigest()
+        hashedbytes  = hashedn.encode('utf-8')
+    return '$sha512$%i$%s$%s' % (n, salt, hashedbytes.decode('utf-8'))
 
 
 def hash_sha1(password, salt='', n=12):
     salt = salt or sha(urandom(32)).hexdigest()
-    hashed = sha(salt + password).hexdigest()
-    for i in xrange(n):
-        hashed = sha(hashed + salt).hexdigest()
-    return '$sha1$%i$%s$%s' % (n, salt, hashed)
+    saltbytes = salt.encode('utf-8')
+    passwordbytes = password.encode('utf-8')
+    hashed = sha(saltbytes + passwordbytes).hexdigest()
+    hashedbytes = hashed.encode('utf-8')
+    for i in range(n):
+        hashedn = sha(hashedbytes + saltbytes).hexdigest()
+        hashedbytes  = hashedn.encode('utf-8')
+    return '$sha1$%i$%s$%s' % (n, salt, hashedbytes.decode('utf-8'))
 
 
 def hash_bcrypt(password, salt='', n=12):
