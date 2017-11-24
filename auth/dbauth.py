@@ -353,13 +353,20 @@ class DBAuth(object):
         if not user_perms:
             return False
 
-        # perm is a sequence?
-        try:
-            perm.__iter__
-        except AttributeError:
-            perm = [perm]
+        permStr = [perm]
+        # perm sequence check
         perm = set(perm)
-        return user_perms.intersection(perm) == perm
+        res = user_perms.intersection(perm) == perm
+        if res:
+            return True
+
+        # perm string check
+        perm = set(permStr)
+        res = user_perms.intersection(perm) == perm
+        if res:
+            return True
+
+        return False
 
     def get_permissions(self, user=None):
         """
