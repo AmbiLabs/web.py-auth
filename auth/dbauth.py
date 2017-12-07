@@ -434,9 +434,10 @@ class DBAuth(object):
         if not dbperm: return
 
         dbperm = dbperm[0]
-        query_where = web.db.sqlwhere(
-            {'up_user_id': user_id,
-             'up_permission_id': dbperm.permission_id})
+        query_where = web.db.sqlwhere([
+            ('up_user_id', user_id),
+            ('up_permission_id', dbperm.permission_id)
+            ])
         dbup = self.db.select('user_permission', where=query_where).list()
         if dbup: return  # already assigned
 
@@ -452,16 +453,16 @@ class DBAuth(object):
         """
         """
         auth_user = self.get_user()
-
-        query_where = web.db.sqlwhere({'permission_codename': perm})
+        query_where = web.db.sqlwhere([('permission_codename', perm)])
         dbperm = self.db.select('permission', where=query_where).list()
         if not dbperm: return
 
         dbperm = dbperm[0]
 
-        query_where = web.db.sqlwhere(
-            {'up_user_id': user_id,
-             'up_permission_id': dbperm.permission_id})
+        query_where = web.db.sqlwhere([
+            ('up_user_id', user_id),
+            ('up_permission_id', dbperm.permission_id)
+            ])
         self.db.delete('user_permission', where=query_where)
 
         if auth_user and auth_user.user_id == user_id:
