@@ -313,7 +313,7 @@ class DBAuth(object):
             except (AttributeError, SessionExpired):
                 return
         else:
-            query_where = web.db.sqlwhere({'user_login': login})
+            query_where = web.db.sqlwhere([('user_login', login)])
             user = self.db.select('user', where=query_where).list()
             if not user:
                 return
