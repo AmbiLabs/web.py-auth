@@ -220,7 +220,7 @@ class DBAuth(object):
         """
         Return True if a user with that login already exist.
         """
-        query_where = web.db.sqlwhere({'user_login': login})
+        query_where = web.db.sqlwhere([('user_login', login)])
         count = self.db.select('user',
                                what='count(*) as count',
                                where=query_where).list()
