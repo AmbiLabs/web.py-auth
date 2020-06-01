@@ -289,7 +289,7 @@ class DBAuth(object):
             self.set_password(login, data['password'])
             del data['password']
         auth_user = self.get_user()
-        query_where = web.db.sqlwhere({'user_login': login})
+        query_where = web.db.sqlwhere([('user_login', login)])
         self.db.update('user', where=query_where, **data)
 
         if auth_user and auth_user.user_login == login:

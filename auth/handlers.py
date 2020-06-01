@@ -169,8 +169,8 @@ class ResetToken(object):
             if not login:
                 raise AuthError
 
-            query_where = web.db.sqlwhere({'user_login': login,
-                                           auth.config.db_email_field: login},
+            query_where = web.db.sqlwhere([('user_login', login),
+                                           (auth.config.db_email_field, login)],
                                           ' OR ')
             user = auth.db.select('user', where=query_where).list()
             if not user:
